@@ -3,46 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiniela Mundial 2026</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
-        /* Degradado moderno estilo Mundial 2026 (Verde neón a Azul profundo) */
-        body { 
-            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
-            background-attachment: fixed;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            text-align: center; margin: 0; padding: 20px; 
-        }
-        
-        /* Tarjeta principal más moderna */
-        .contenedor { 
-            background-color: rgba(255, 255, 255, 0.95);
-            max-width: 600px; margin: 0 auto; padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0px 15px 25px rgba(0,0,0,0.2); 
-        }
-        
+        /* La misma pintura hermosa de antes */
+        body { background: linear-gradient(135deg, #00ff87 0%, #60efff 100%); background-attachment: fixed; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; }
+        .contenedor { background-color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 20px; box-shadow: 0px 15px 25px rgba(0,0,0,0.2); }
         h1 { color: #1e3a8a; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         h3 { color: #333; }
-        
         .alerta-tiempo { background-color: #ffebee; color: #c62828; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px; display: none; margin-top: 15px; border: 2px solid #ef9a9a; box-shadow: 0px 4px 6px rgba(229, 57, 53, 0.2);}
-        
         .selector-partidos { width: 100%; padding: 12px; font-size: 18px; margin-bottom: 20px; background-color: #f8fafc; border: 2px solid #cbd5e1; border-radius: 12px; font-weight: bold; color: #1e293b; cursor: pointer;}
         .caja-nombre { width: 80%; padding: 12px; font-size: 18px; margin-bottom: 20px; text-align: center; border: 2px solid #cbd5e1; border-radius: 12px; cursor: pointer; background-color: #f8fafc; }
-        
         .partido { background-color: white; margin: 15px 0; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; font-size: 18px; box-shadow: 0px 4px 6px rgba(0,0,0,0.05);}
         .caja-goles { width: 45px; padding: 8px; font-size: 22px; text-align: center; border-radius: 8px; border: 2px solid #94a3b8; font-weight: bold; color: #1e293b;}
-        
         button { background-color: #4f46e5; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.3s; box-shadow: 0px 4px 10px rgba(79, 70, 229, 0.4);}
         button:hover { background-color: #4338ca; transform: translateY(-2px); }
-        
         .boton-whatsapp { background-color: #25D366; box-shadow: 0px 4px 10px rgba(37, 211, 102, 0.4);} 
         .boton-whatsapp:hover { background-color: #1ebe5d; }
         .boton-tabla { background-color: #d946ef; width: 100%; margin-top: 25px; font-size: 20px; padding: 15px; box-shadow: 0px 4px 10px rgba(217, 70, 239, 0.4);}
         .boton-tabla:hover { background-color: #c026d3; }
-        
         .zona-director { background-color: #e0f2fe; border: 2px dashed #0284c7; padding: 20px; margin-top: 30px; border-radius: 15px; }
         .apuesta-guardada { background-color: #f8fafc; margin: 8px 0; padding: 12px; border-left: 6px solid #4f46e5; text-align: left; border-radius: 0 8px 8px 0;}
         .ganador { background-color: #dcfce7; color: #166534; padding: 12px; font-weight: bold; font-size: 18px; border-radius: 8px; margin-top: 10px; border: 1px solid #bbf7d0;}
-        
         .fila-posicion { display: flex; justify-content: space-between; background-color: #fff; border-bottom: 1px solid #f1f5f9; padding: 15px; font-size: 20px; align-items: center;}
         .fila-posicion:nth-child(1) { font-weight: bold; background: linear-gradient(to right, #fef08a, #fde047); border-radius: 12px; margin-bottom: 5px; border: 1px solid #facc15;} 
         .fila-posicion:nth-child(2) { background: linear-gradient(to right, #f1f5f9, #e2e8f0); border-radius: 12px; margin-bottom: 5px; border: 1px solid #cbd5e1;} 
@@ -84,7 +68,7 @@
         </div>
 
         <div id="alertaTiempoAgotado" class="alerta-tiempo">
-            ⏳ ¡TIEMPO AGOTADO! El partido ya empezó. No se aceptan más apuestas.
+            ⏳ ¡TIEMPO AGOTADO! El partido ya empezó.
         </div>
 
         <button id="botonGuardar" onclick="guardarApuesta()">¡Guardar Apuesta!</button>
@@ -97,7 +81,6 @@
 
         <div class="zona-director">
             <h3 style="color: #0284c7; margin-top: 0;">👑 Zona del Director</h3>
-            <p>Ingresa el resultado REAL al terminar el partido:</p>
             <div class="partido" style="background-color: white;">
                 <span id="directorEq1">🇲🇽</span>
                 <input type="number" id="realEq1" class="caja-goles" min="0" value="0">
@@ -112,16 +95,14 @@
     </div>
 
     <script>
-        // AQUÍ SE AGREGAN LAS FECHAS Y BANDERAS PARA EL ROBOT
-        // ¡OJO! En programación los meses empiezan en 0. Enero es 0... ¡Junio es el mes 5!
         let agenda = [
-            { eq1: "México", band1: "🇲🇽", eq2: "Sudáfrica", band2: "🇿🇦", fechaLimite: new Date(2026, 5, 11, 13, 0) }, // 0
-            { eq1: "Canadá", band1: "🇨🇦", eq2: "Repesca UEFA", band2: "🇪🇺", fechaLimite: new Date(2026, 5, 12, 15, 0) }, // 1
-            { eq1: "EE. UU.", band1: "🇺🇸", eq2: "Paraguay", band2: "🇵🇾", fechaLimite: new Date(2026, 5, 12, 18, 0) }, // 2
-            { eq1: "Brasil", band1: "🇧🇷", eq2: "Marruecos", band2: "🇲🇦", fechaLimite: new Date(2026, 5, 13, 18, 0) }, // 3
-            { eq1: "España", band1: "🇪🇸", eq2: "Cabo Verde", band2: "🇨🇻", fechaLimite: new Date(2026, 5, 15, 10, 0) }, // 4
-            { eq1: "Argentina", band1: "🇦🇷", eq2: "Argelia", band2: "🇩🇿", fechaLimite: new Date(2026, 5, 16, 21, 0) }, // 5
-            { eq1: "Prueba", band1: "⚙️", eq2: "Vencido", band2: "⏱️", fechaLimite: new Date(2023, 0, 1, 12, 0) } // 6
+            { eq1: "México", band1: "🇲🇽", eq2: "Sudáfrica", band2: "🇿🇦", fechaLimite: new Date(2026, 5, 11, 13, 0) }, 
+            { eq1: "Canadá", band1: "🇨🇦", eq2: "Repesca UEFA", band2: "🇪🇺", fechaLimite: new Date(2026, 5, 12, 15, 0) }, 
+            { eq1: "EE. UU.", band1: "🇺🇸", eq2: "Paraguay", band2: "🇵🇾", fechaLimite: new Date(2026, 5, 12, 18, 0) }, 
+            { eq1: "Brasil", band1: "🇧🇷", eq2: "Marruecos", band2: "🇲🇦", fechaLimite: new Date(2026, 5, 13, 18, 0) }, 
+            { eq1: "España", band1: "🇪🇸", eq2: "Cabo Verde", band2: "🇨🇻", fechaLimite: new Date(2026, 5, 15, 10, 0) }, 
+            { eq1: "Argentina", band1: "🇦🇷", eq2: "Argelia", band2: "🇩🇿", fechaLimite: new Date(2026, 5, 16, 21, 0) }, 
+            { eq1: "Prueba", band1: "⚙️", eq2: "Vencido", band2: "⏱️", fechaLimite: new Date(2023, 0, 1, 12, 0) } 
         ];
 
         let memoriaApuestas = [];
@@ -159,7 +140,14 @@
             let partido = agenda[num];
             let mensaje = "🏆 ¡Quiniela Familiar 2026! ⚽\n\nPartido de hoy:\n" + partido.band1 + " " + partido.eq1 + " vs " + partido.eq2 + " " + partido.band2 + "\n\n¡Envíen sus resultados al grupo para guardarlos!";
             navigator.clipboard.writeText(mensaje);
-            alert("¡Copiado! Pégalo en el grupo familiar.");
+            
+            // ¡NUEVA ALERTA PRO!
+            Swal.fire({
+                title: '¡Copiado!',
+                text: 'Ya puedes pegarlo en el grupo de WhatsApp de la familia.',
+                icon: 'success',
+                confirmButtonColor: '#25D366'
+            });
         }
 
         function guardarApuesta() {
@@ -179,6 +167,15 @@
             
             document.getElementById("golesEq1").value = 0;
             document.getElementById("golesEq2").value = 0;
+
+            // Pequeña notificación visual sin interrumpir mucho
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Apuesta guardada para ' + nombre,
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
 
         function calcularGanadores() {
@@ -186,18 +183,43 @@
             let real2 = document.getElementById("realEq2").value;
             let textoGanadores = "";
             let alguienGano = false;
+            let ganadoresNombres = [];
 
             for (let i = 0; i < memoriaApuestas.length; i++) {
                 let apuesta = memoriaApuestas[i];
                 if (apuesta.goles1 === real1 && apuesta.goles2 === real2) {
                     textoGanadores = textoGanadores + "<div class='ganador'>🎉 ¡" + apuesta.nombrePersona + " adivinó el resultado exacto! (+3 Puntos) 🎉</div>";
                     puntuacionFamiliar[apuesta.nombrePersona] = puntuacionFamiliar[apuesta.nombrePersona] + 3;
+                    ganadoresNombres.push(apuesta.nombrePersona);
                     alguienGano = true;
                 }
             }
 
             if (alguienGano === false) {
                 textoGanadores = "<div class='ganador' style='background-color: #fee2e2; color: #991b1b; border-color: #fca5a5;'>Nadie le atinó. ¡Suerte para la próxima! 😔</div>";
+                // Alerta de que nadie ganó
+                Swal.fire({
+                    title: '¡Fin del partido!',
+                    text: 'Nadie adivinó el resultado esta vez.',
+                    icon: 'info',
+                    confirmButtonColor: '#4f46e5'
+                });
+            } else {
+                // ¡LA MAGIA DEL CONFETI CUANDO ALGUIEN GANA!
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.5 },
+                    zIndex: 9999
+                });
+
+                // Alerta gigante de celebración
+                Swal.fire({
+                    title: '¡TENEMOS GANADOR!',
+                    text: '¡Los puntos han sido sumados a la tabla!',
+                    icon: 'success',
+                    confirmButtonColor: '#4f46e5'
+                });
             }
 
             document.getElementById("zonaDeGanadores").innerHTML = textoGanadores;
