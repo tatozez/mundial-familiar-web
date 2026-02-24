@@ -6,7 +6,6 @@
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -15,21 +14,29 @@
         .contenedor { background-color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 20px; box-shadow: 0px 15px 25px rgba(0,0,0,0.2); }
         h1 { color: #1e3a8a; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         h3 { color: #333; }
+        .etiqueta-hoy { display: inline-block; background-color: #e11d48; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 15px; letter-spacing: 1px;}
         .alerta-tiempo { background-color: #ffebee; color: #c62828; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px; display: none; margin-top: 15px; border: 2px solid #ef9a9a;}
-        .selector-partidos { width: 100%; padding: 12px; font-size: 18px; margin-bottom: 20px; background-color: #f8fafc; border: 2px solid #cbd5e1; border-radius: 12px; font-weight: bold; color: #1e293b; cursor: pointer;}
+        
         .caja-nombre { width: 80%; padding: 12px; font-size: 18px; margin-bottom: 20px; text-align: center; border: 2px solid #cbd5e1; border-radius: 12px; cursor: pointer; background-color: #f8fafc; }
-        .partido { background-color: white; margin: 15px 0; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; font-size: 18px;}
+        .partido { background-color: white; margin: 15px 0; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; font-size: 18px; box-shadow: 0px 4px 6px rgba(0,0,0,0.05);}
         .caja-goles { width: 45px; padding: 8px; font-size: 22px; text-align: center; border-radius: 8px; border: 2px solid #94a3b8; font-weight: bold; color: #1e293b;}
-        button { background-color: #4f46e5; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.3s; }
+        
+        button { background-color: #4f46e5; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.3s; box-shadow: 0px 4px 10px rgba(79, 70, 229, 0.4);}
         button:hover { background-color: #4338ca; transform: translateY(-2px); }
-        .boton-whatsapp { background-color: #25D366; } 
+        .boton-whatsapp { background-color: #25D366; width: 100%; font-size: 18px;} 
         .boton-whatsapp:hover { background-color: #1ebe5d; }
         .boton-tabla { background-color: #d946ef; width: 100%; margin-top: 25px; font-size: 20px; padding: 15px;}
         .boton-tabla:hover { background-color: #c026d3; }
-        .zona-director { background-color: #e0f2fe; border: 2px dashed #0284c7; padding: 20px; margin-top: 30px; border-radius: 15px; }
+        
+        .zona-director { background-color: #1e293b; color: white; padding: 25px; margin-top: 40px; border-radius: 15px; box-shadow: inset 0px 4px 10px rgba(0,0,0,0.5);}
+        .zona-director h3 { color: #38bdf8; margin-top: 0; }
+        .selector-director { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 15px; border-radius: 8px; }
+        .boton-rojo { background-color: #dc2626; box-shadow: 0px 4px 10px rgba(220, 38, 38, 0.4); margin-top: 20px;}
+        .boton-rojo:hover { background-color: #b91c1c; }
+        
         .apuesta-guardada { background-color: #f8fafc; margin: 8px 0; padding: 12px; border-left: 6px solid #4f46e5; text-align: left; border-radius: 0 8px 8px 0; animation: aparecer 0.5s ease-out;}
         @keyframes aparecer { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        .ganador { background-color: #dcfce7; color: #166534; padding: 12px; font-weight: bold; font-size: 18px; border-radius: 8px; margin-top: 10px; border: 1px solid #bbf7d0;}
+        
         .fila-posicion { display: flex; justify-content: space-between; background-color: #fff; border-bottom: 1px solid #f1f5f9; padding: 15px; font-size: 20px; align-items: center;}
         .fila-posicion:nth-child(1) { font-weight: bold; background: linear-gradient(to right, #fef08a, #fde047); border-radius: 12px; margin-bottom: 5px; border: 1px solid #facc15;} 
         .fila-posicion:nth-child(2) { background: linear-gradient(to right, #f1f5f9, #e2e8f0); border-radius: 12px; margin-bottom: 5px; border: 1px solid #cbd5e1;} 
@@ -39,64 +46,69 @@
 <body>
     <div class="contenedor">
         <h1>🏆 Quiniela 2026 ⚽</h1>
+        <div class="etiqueta-hoy">PARTIDO ACTIVO</div>
         
-        <button class="boton-whatsapp" onclick="copiarParaWhatsApp()">📲 Copiar para WhatsApp</button>
-        <hr style="border: 1px solid #e2e8f0; margin: 20px 0;">
+        <div class="partido" style="border-color: #4f46e5; border-width: 3px;">
+            <span id="textoEquipo1">Cargando...</span>
+            <input type="number" id="golesEq1" class="caja-goles" min="0" value="0">
+            <span>vs</span>
+            <input type="number" id="golesEq2" class="caja-goles" min="0" value="0">
+            <span id="textoEquipo2">Cargando...</span>
+        </div>
 
-        <h3>1. Selecciona el Partido</h3>
-        <select id="selectorPartido" class="selector-partidos" onchange="cargarPartido()">
-            <option value="0">🇲🇽 México vs Sudáfrica 🇿🇦 (11 Jun)</option>
-            <option value="1">🇨🇦 Canadá vs Repesca UEFA 🇪🇺 (12 Jun)</option>
-            <option value="2">🇺🇸 EE. UU. vs Paraguay 🇵🇾 (12 Jun)</option>
-            <option value="3">🇧🇷 Brasil vs Marruecos 🇲🇦 (13 Jun)</option>
-            <option value="4">🇪🇸 España vs Cabo Verde 🇨🇻 (15 Jun)</option>
-            <option value="5">🇦🇷 Argentina vs Argelia 🇩🇿 (16 Jun)</option>
-            <option value="6">⚽ Partido Vencido (Prueba Bloqueo)</option>
-        </select>
-        
-        <h3>2. ¿Quién está apostando?</h3>
+        <h3>¿Quién está apostando?</h3>
         <select id="nombreApostador" class="caja-nombre">
             <option value="Roberto">Roberto</option>
             <option value="Melissa">Melissa (Mamá)</option>
             <option value="Estuardo">Estuardo (Papá)</option>
             <option value="Luis">Luis (Hermano)</option>
         </select>
-        
-        <div class="partido">
-            <span id="textoEquipo1">🇲🇽 <strong>México</strong></span>
-            <input type="number" id="golesEq1" class="caja-goles" min="0" value="0">
-            <span>vs</span>
-            <input type="number" id="golesEq2" class="caja-goles" min="0" value="0">
-            <span id="textoEquipo2"><strong>Sudáfrica</strong> 🇿🇦</span>
-        </div>
 
         <div id="alertaTiempoAgotado" class="alerta-tiempo">
-            ⏳ ¡TIEMPO AGOTADO! El partido ya empezó.
+            ⏳ ¡TIEMPO AGOTADO! El partido ya empezó o ya terminó.
         </div>
 
         <button id="botonGuardar" onclick="guardarApuesta()">¡Guardar Apuesta!</button>
+        <button class="boton-whatsapp" onclick="copiarParaWhatsApp()" style="margin-top: 15px;">📲 Invitar por WhatsApp</button>
 
-        <h3 style="margin-top: 25px;">📡 Apuestas Familiares (En Vivo):</h3>
+        <h3 style="margin-top: 30px;">📡 Apuestas Familiares (En Vivo):</h3>
         <div id="zonaDeApuestas">Cargando apuestas desde la nube...</div>
 
         <button class="boton-tabla" onclick="mostrarTabla()">🏆 Ver Tabla de Posiciones 🏆</button>
         <div id="zonaTabla" style="margin-top: 15px;"></div>
 
         <div class="zona-director">
-            <h3 style="color: #0284c7; margin-top: 0;">👑 Zona del Director</h3>
-            <div class="partido" style="background-color: white;">
+            <h3>👑 Control Remoto del Director</h3>
+            <p style="font-size: 14px; color: #94a3b8;">Cambia el partido aquí y se actualizará en los celulares de tu familia.</p>
+            
+            <select id="selectorDirector" class="selector-director" onchange="cambiarPartidoEnLaNube()">
+                <option value="0">🇲🇽 México vs Sudáfrica 🇿🇦</option>
+                <option value="1">🇨🇦 Canadá vs Repesca UEFA 🇪🇺</option>
+                <option value="2">🇺🇸 EE. UU. vs Paraguay 🇵🇾</option>
+                <option value="3">🇧🇷 Brasil vs Marruecos 🇲🇦</option>
+                <option value="4">🇪🇸 España vs Cabo Verde 🇨🇻</option>
+                <option value="5">🇦🇷 Argentina vs Argelia 🇩🇿</option>
+                <option value="6">⚽ Partido Vencido (Prueba)</option>
+            </select>
+
+            <hr style="border-color: #334155; margin: 20px 0;">
+            
+            <p style="margin-bottom: 5px;"><strong>Cerrar el partido y Repartir Puntos:</strong></p>
+            <div class="partido" style="background-color: #0f172a; border: 1px solid #334155; margin-top: 0;">
                 <span id="directorEq1">🇲🇽</span>
-                <input type="number" id="realEq1" class="caja-goles" min="0" value="0">
+                <input type="number" id="realEq1" class="caja-goles" min="0" value="0" style="background: #1e293b; color: white;">
                 <span>vs</span>
-                <input type="number" id="realEq2" class="caja-goles" min="0" value="0">
+                <input type="number" id="realEq2" class="caja-goles" min="0" value="0" style="background: #1e293b; color: white;">
                 <span id="directorEq2">🇿🇦</span>
             </div>
-            <button onclick="calcularGanadores()">🥇 ¡Repartir Puntos!</button>
+            <button onclick="calcularGanadores()" style="width: 100%; margin-top: 10px;">🥇 ¡Repartir Puntos!</button>
+
+            <button class="boton-rojo" onclick="reiniciarTodoElSistema()">🛑 BORRAR TODAS LAS APUESTAS Y PUNTOS</button>
         </div>
     </div>
 
     <script>
-        // 1. TUS LLAVES SECRETAS DE FIREBASE
+        // 1. TUS LLAVES SECRETAS
         const firebaseConfig = {
           apiKey: "AIzaSyDlAsctjyrt4lW5UtRHfEHvH-70vxa_wxM",
           authDomain: "quiniela-familiar-7edd5.firebaseapp.com",
@@ -105,8 +117,7 @@
           messagingSenderId: "1076654812047",
           appId: "1:1076654812047:web:850f1728a80b188a63b9fa"
         };
-        // Encendemos el motor
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
         // 2. LA AGENDA
@@ -123,8 +134,9 @@
         let memoriaApuestas = [];
         let puntuacionFamiliar = { "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 };
         let escuchadorApuestas = null;
+        let partidoActivoId = 0; // Por defecto el 0
 
-        // 3. ESCUCHAR LA TABLA DE POSICIONES EN TIEMPO REAL
+        // ESCUCHAR LA TABLA DE POSICIONES
         db.collection("sistema").doc("ranking").onSnapshot((doc) => {
             if (doc.exists) {
                 puntuacionFamiliar = doc.data();
@@ -134,9 +146,25 @@
             }
         });
 
-        function cargarPartido() {
-            let numId = document.getElementById("selectorPartido").value;
-            let partido = agenda[numId];
+        // ESCUCHAR EL CONTROL REMOTO DEL DIRECTOR
+        db.collection("sistema").doc("controlRemoto").onSnapshot((doc) => {
+            if (doc.exists) {
+                partidoActivoId = doc.data().partidoActual;
+                document.getElementById("selectorDirector").value = partidoActivoId; // Actualiza tu menú
+                cargarPartido(partidoActivoId); // Actualiza la pantalla de todos
+            } else {
+                db.collection("sistema").doc("controlRemoto").set({ partidoActual: 0 });
+            }
+        });
+
+        // EL DIRECTOR CAMBIA EL PARTIDO
+        function cambiarPartidoEnLaNube() {
+            let nuevoId = document.getElementById("selectorDirector").value;
+            db.collection("sistema").doc("controlRemoto").update({ partidoActual: parseInt(nuevoId) });
+        }
+
+        function cargarPartido(id) {
+            let partido = agenda[id];
 
             document.getElementById("textoEquipo1").innerHTML = partido.band1 + " <strong>" + partido.eq1 + "</strong>";
             document.getElementById("textoEquipo2").innerHTML = "<strong>" + partido.eq2 + "</strong> " + partido.band2;
@@ -151,10 +179,10 @@
                 document.getElementById("alertaTiempoAgotado").style.display = "none";
             }
 
-            // MAGIA EN TIEMPO REAL: Firebase vigila las apuestas de ESTE partido
-            if(escuchadorApuestas) escuchadorApuestas(); // Apagamos el vigilante del partido anterior
+            if(escuchadorApuestas) escuchadorApuestas(); 
             
-            escuchadorApuestas = db.collection("apuestas").where("partidoId", "==", numId).onSnapshot((snapshot) => {
+            // Cargar apuestas solo de este partido
+            escuchadorApuestas = db.collection("apuestas").where("partidoId", "==", id.toString()).onSnapshot((snapshot) => {
                 let texto = "";
                 memoriaApuestas = [];
                 snapshot.forEach((doc) => {
@@ -167,10 +195,9 @@
         }
 
         function copiarParaWhatsApp() {
-            let num = document.getElementById("selectorPartido").value;
-            let partido = agenda[num];
+            let partido = agenda[partidoActivoId];
             let urlApp = window.location.href; 
-            let mensaje = `🏆 ¡Quiniela Familiar 2026! ⚽\n\nPartido de hoy:\n${partido.band1} ${partido.eq1} vs ${partido.eq2} ${partido.band2}\n\n👉 Entra aquí a poner tu apuesta:\n${urlApp}`;
+            let mensaje = `🏆 ¡Quiniela Familiar 2026! ⚽\n\nEl partido ACTIVO para apostar es:\n${partido.band1} ${partido.eq1} vs ${partido.eq2} ${partido.band2}\n\n👉 Entra aquí a poner tu apuesta:\n${urlApp}`;
             navigator.clipboard.writeText(mensaje);
             Swal.fire('¡Copiado!', 'El link y el partido ya están copiados para WhatsApp.', 'success');
         }
@@ -179,12 +206,10 @@
             let nombre = document.getElementById("nombreApostador").value;
             let gEq1 = document.getElementById("golesEq1").value;
             let gEq2 = document.getElementById("golesEq2").value;
-            let numId = document.getElementById("selectorPartido").value;
 
-            // ENVIAMOS LA APUESTA A LA NUBE (Firebase)
             db.collection("apuestas").add({
                 nombrePersona: nombre,
-                partidoId: numId,
+                partidoId: partidoActivoId.toString(),
                 goles1: gEq1,
                 goles2: gEq2,
                 fecha: firebase.firestore.FieldValue.serverTimestamp()
@@ -192,7 +217,6 @@
             
             document.getElementById("golesEq1").value = 0;
             document.getElementById("golesEq2").value = 0;
-
             Swal.fire({ position: 'top-end', icon: 'success', title: 'Apuesta enviada a la nube ☁️', showConfirmButton: false, timer: 1500 });
         }
 
@@ -209,7 +233,6 @@
                 }
             }
 
-            // GUARDAMOS EL NUEVO RANKING EN LA NUBE
             db.collection("sistema").doc("ranking").set(puntuacionFamiliar);
 
             if (alguienGano) {
@@ -235,8 +258,34 @@
             document.getElementById("zonaTabla").innerHTML = htmlTabla;
         }
 
-        // Arrancamos la app
-        window.onload = cargarPartido;
+        // EL BOTÓN ROJO DE EMERGENCIA
+        function reiniciarTodoElSistema() {
+            Swal.fire({
+                title: '¿Estás completamente seguro?',
+                text: "Esto va a borrar TODAS las apuestas de todos los partidos y regresará los puntos a CERO. ¡No hay vuelta atrás!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Sí, ¡borrar todo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 1. Regresar puntos a 0
+                    let ceros = { "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 };
+                    db.collection("sistema").doc("ranking").set(ceros);
+                    
+                    // 2. Borrar todas las apuestas de la nube
+                    db.collection("apuestas").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            doc.ref.delete();
+                        });
+                    });
+
+                    Swal.fire('¡Sistema Reiniciado!', 'El pizarrón está totalmente limpio y listo para el Mundial real.', 'success');
+                }
+            })
+        }
     </script>
 </body>
 </html>
