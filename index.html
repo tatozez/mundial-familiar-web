@@ -12,7 +12,10 @@
     <style>
         body { background: linear-gradient(135deg, #00ff87 0%, #60efff 100%); background-attachment: fixed; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; }
         .contenedor { background-color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 20px; box-shadow: 0px 15px 25px rgba(0,0,0,0.2); }
-        h1 { color: #1e3a8a; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        
+        /* El título ahora tiene "cursor: pointer" para que parezca botón si pasas el mouse */
+        h1 { color: #1e3a8a; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; cursor: pointer; user-select: none;}
+        
         h3 { color: #333; }
         .etiqueta-hoy { display: inline-block; background-color: #e11d48; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 15px; letter-spacing: 1px;}
         .alerta-tiempo { background-color: #ffebee; color: #c62828; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px; display: none; margin-top: 15px; border: 2px solid #ef9a9a;}
@@ -28,14 +31,15 @@
         .boton-tabla { background-color: #d946ef; width: 100%; margin-top: 25px; font-size: 20px; padding: 15px;}
         .boton-tabla:hover { background-color: #c026d3; }
         
-        .zona-director { background-color: #1e293b; color: white; padding: 25px; margin-top: 40px; border-radius: 15px; box-shadow: inset 0px 4px 10px rgba(0,0,0,0.5);}
+        /* ¡MAGIA AQUÍ! display: none; oculta la caja por defecto */
+        .zona-director { display: none; background-color: #1e293b; color: white; padding: 25px; margin-top: 40px; border-radius: 15px; box-shadow: inset 0px 4px 10px rgba(0,0,0,0.5); animation: aparecer 0.5s ease-out;}
         .zona-director h3 { color: #38bdf8; margin-top: 0; }
         .selector-director { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 15px; border-radius: 8px; }
         .boton-rojo { background-color: #dc2626; box-shadow: 0px 4px 10px rgba(220, 38, 38, 0.4); margin-top: 20px;}
         .boton-rojo:hover { background-color: #b91c1c; }
         
         .apuesta-guardada { background-color: #f8fafc; margin: 8px 0; padding: 12px; border-left: 6px solid #4f46e5; text-align: left; border-radius: 0 8px 8px 0; animation: aparecer 0.5s ease-out;}
-        @keyframes aparecer { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes aparecer { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
         .fila-posicion { display: flex; justify-content: space-between; background-color: #fff; border-bottom: 1px solid #f1f5f9; padding: 15px; font-size: 20px; align-items: center;}
         .fila-posicion:nth-child(1) { font-weight: bold; background: linear-gradient(to right, #fef08a, #fde047); border-radius: 12px; margin-bottom: 5px; border: 1px solid #facc15;} 
@@ -45,7 +49,7 @@
 </head>
 <body>
     <div class="contenedor">
-        <h1>🏆 Quiniela 2026 ⚽</h1>
+        <h1 onclick="toqueSecreto()">🏆 Quiniela 2026 ⚽</h1>
         <div class="etiqueta-hoy">PARTIDO ACTIVO</div>
         
         <div class="partido" style="border-color: #4f46e5; border-width: 3px;">
@@ -77,7 +81,7 @@
         <button class="boton-tabla" onclick="mostrarTabla()">🏆 Ver Tabla de Posiciones 🏆</button>
         <div id="zonaTabla" style="margin-top: 15px;"></div>
 
-        <div class="zona-director">
+        <div class="zona-director" id="consolaAdmin">
             <h3>👑 Control Remoto del Director</h3>
             <p style="font-size: 14px; color: #94a3b8;">Cambia el partido aquí y se actualizará en los celulares de tu familia.</p>
             
@@ -104,10 +108,54 @@
             <button onclick="calcularGanadores()" style="width: 100%; margin-top: 10px;">🥇 ¡Repartir Puntos!</button>
 
             <button class="boton-rojo" onclick="reiniciarTodoElSistema()">🛑 BORRAR TODAS LAS APUESTAS Y PUNTOS</button>
+            <button onclick="ocultarConsola()" style="background-color: #475569; margin-top: 15px; width: 100%;">Cerrar Consola</button>
         </div>
     </div>
 
     <script>
+        // --- SISTEMA DE SEGURIDAD DEL DIRECTOR ---
+        let contadorToques = 0;
+        let temporizadorToques;
+
+        function toqueSecreto() {
+            contadorToques++;
+            clearTimeout(temporizadorToques);
+            
+            if (contadorToques === 3) {
+                contadorToques = 0; // Reiniciamos el contador
+                pedirPassword();
+            } else {
+                // Si pasa más de 1 segundo entre toques, el contador vuelve a cero
+                temporizadorToques = setTimeout(() => { contadorToques = 0; }, 1000);
+            }
+        }
+
+        function pedirPassword() {
+            Swal.fire({
+                title: '🔒 Acceso de Director',
+                input: 'password',
+                inputPlaceholder: 'Ingresa la contraseña',
+                showCancelButton: true,
+                confirmButtonText: 'Entrar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#1e293b'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === "roberto2026") { 
+                        document.getElementById("consolaAdmin").style.display = "block";
+                        Swal.fire({icon: 'success', title: 'Acceso Concedido', text: 'Bienvenido a la consola de control.', showConfirmButton: false, timer: 1500});
+                    } else {
+                        Swal.fire('Error', 'Contraseña incorrecta. 🚨', 'error');
+                    }
+                }
+            });
+        }
+
+        function ocultarConsola() {
+            document.getElementById("consolaAdmin").style.display = "none";
+        }
+        // ------------------------------------------
+
         // 1. TUS LLAVES SECRETAS
         const firebaseConfig = {
           apiKey: "AIzaSyDlAsctjyrt4lW5UtRHfEHvH-70vxa_wxM",
@@ -134,9 +182,8 @@
         let memoriaApuestas = [];
         let puntuacionFamiliar = { "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 };
         let escuchadorApuestas = null;
-        let partidoActivoId = 0; // Por defecto el 0
+        let partidoActivoId = 0;
 
-        // ESCUCHAR LA TABLA DE POSICIONES
         db.collection("sistema").doc("ranking").onSnapshot((doc) => {
             if (doc.exists) {
                 puntuacionFamiliar = doc.data();
@@ -146,18 +193,16 @@
             }
         });
 
-        // ESCUCHAR EL CONTROL REMOTO DEL DIRECTOR
         db.collection("sistema").doc("controlRemoto").onSnapshot((doc) => {
             if (doc.exists) {
                 partidoActivoId = doc.data().partidoActual;
-                document.getElementById("selectorDirector").value = partidoActivoId; // Actualiza tu menú
-                cargarPartido(partidoActivoId); // Actualiza la pantalla de todos
+                document.getElementById("selectorDirector").value = partidoActivoId; 
+                cargarPartido(partidoActivoId); 
             } else {
                 db.collection("sistema").doc("controlRemoto").set({ partidoActual: 0 });
             }
         });
 
-        // EL DIRECTOR CAMBIA EL PARTIDO
         function cambiarPartidoEnLaNube() {
             let nuevoId = document.getElementById("selectorDirector").value;
             db.collection("sistema").doc("controlRemoto").update({ partidoActual: parseInt(nuevoId) });
@@ -181,7 +226,6 @@
 
             if(escuchadorApuestas) escuchadorApuestas(); 
             
-            // Cargar apuestas solo de este partido
             escuchadorApuestas = db.collection("apuestas").where("partidoId", "==", id.toString()).onSnapshot((snapshot) => {
                 let texto = "";
                 memoriaApuestas = [];
@@ -258,31 +302,24 @@
             document.getElementById("zonaTabla").innerHTML = htmlTabla;
         }
 
-        // EL BOTÓN ROJO DE EMERGENCIA
         function reiniciarTodoElSistema() {
             Swal.fire({
                 title: '¿Estás completamente seguro?',
-                text: "Esto va a borrar TODAS las apuestas de todos los partidos y regresará los puntos a CERO. ¡No hay vuelta atrás!",
+                text: "Esto va a borrar TODAS las apuestas de todos los partidos y regresará los puntos a CERO.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#334155',
-                confirmButtonText: 'Sí, ¡borrar todo!',
-                cancelButtonText: 'Cancelar'
+                confirmButtonText: 'Sí, ¡borrar todo!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // 1. Regresar puntos a 0
                     let ceros = { "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 };
                     db.collection("sistema").doc("ranking").set(ceros);
-                    
-                    // 2. Borrar todas las apuestas de la nube
                     db.collection("apuestas").get().then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            doc.ref.delete();
-                        });
+                        querySnapshot.forEach((doc) => { doc.ref.delete(); });
                     });
-
-                    Swal.fire('¡Sistema Reiniciado!', 'El pizarrón está totalmente limpio y listo para el Mundial real.', 'success');
+                    Swal.fire('¡Sistema Reiniciado!', 'El pizarrón está totalmente limpio.', 'success');
+                    ocultarConsola(); // Se esconde sola después de borrar
                 }
             })
         }
