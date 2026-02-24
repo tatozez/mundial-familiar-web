@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Quiniela Mundial 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiniela Pro 2026</title>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -10,107 +11,211 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        body { background: linear-gradient(135deg, #00ff87 0%, #60efff 100%); background-attachment: fixed; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .contenedor { background-color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 20px; box-shadow: 0px 15px 25px rgba(0,0,0,0.2); }
-        h1 { color: #1e3a8a; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; cursor: pointer; user-select: none;}
-        .etiqueta-hoy { display: inline-block; background-color: #e11d48; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 15px; letter-spacing: 1px;}
-        .alerta-tiempo { background-color: #ffebee; color: #c62828; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px; display: none; margin-top: 15px; border: 2px solid #ef9a9a;}
-        .caja-nombre { width: 80%; padding: 12px; font-size: 18px; margin-bottom: 20px; text-align: center; border: 2px solid #cbd5e1; border-radius: 12px; cursor: pointer; background-color: #f8fafc; }
-        .partido { background-color: white; margin: 15px 0; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; font-size: 18px; box-shadow: 0px 4px 6px rgba(0,0,0,0.05);}
-        .caja-goles { width: 45px; padding: 8px; font-size: 22px; text-align: center; border-radius: 8px; border: 2px solid #94a3b8; font-weight: bold; color: #1e293b;}
-        button { background-color: #4f46e5; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.3s; box-shadow: 0px 4px 10px rgba(79, 70, 229, 0.4);}
-        button:hover { background-color: #4338ca; transform: translateY(-2px); }
-        .boton-whatsapp { background-color: #25D366; width: 100%; font-size: 18px;} 
-        .boton-tabla { background-color: #d946ef; width: 100%; margin-top: 25px; font-size: 20px; padding: 15px;}
-        .zona-director { display: none; background-color: #1e293b; color: white; padding: 25px; margin-top: 40px; border-radius: 15px; box-shadow: inset 0px 4px 10px rgba(0,0,0,0.5); animation: aparecer 0.5s ease-out;}
-        .zona-director h3 { color: #38bdf8; margin-top: 0; }
-        .selector-director { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 15px; border-radius: 8px; }
-        .boton-rojo { background-color: #dc2626; box-shadow: 0px 4px 10px rgba(220, 38, 38, 0.4); margin-top: 20px;}
-        .apuesta-guardada { background-color: #f8fafc; margin: 8px 0; padding: 12px; border-left: 6px solid #4f46e5; text-align: left; border-radius: 0 8px 8px 0; animation: aparecer 0.5s ease-out;}
-        @keyframes aparecer { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .fila-posicion { display: flex; justify-content: space-between; background-color: #fff; border-bottom: 1px solid #f1f5f9; padding: 15px; font-size: 20px; align-items: center;}
-        .fila-posicion:nth-child(1) { font-weight: bold; background: linear-gradient(to right, #fef08a, #fde047); border-radius: 12px; margin-bottom: 5px; border: 1px solid #facc15;} 
-        .fila-posicion:nth-child(2) { background: linear-gradient(to right, #f1f5f9, #e2e8f0); border-radius: 12px; margin-bottom: 5px; border: 1px solid #cbd5e1;} 
-        .fila-posicion:nth-child(3) { background: linear-gradient(to right, #fed7aa, #fdba74); border-radius: 12px; margin-bottom: 5px; border: 1px solid #fb923c;} 
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #4f46e5;
+            --accent: #d946ef;
+            --bg: #f1f5f9;
+        }
+
+        body { 
+            background: var(--bg); 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            padding-bottom: 80px; /* Espacio para la barra inferior */
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 { margin: 0; font-size: 24px; cursor: pointer; }
+
+        .contenedor { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* ESTILO DE LAS PESTAÑAS (SECCIONES) */
+        .seccion { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .activa { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TARJETAS */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .etiqueta-viva {
+            background: #ef4444;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* INPUTS Y BOTONES */
+        .partido-flex { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
+        .caja-goles { width: 50px; height: 50px; font-size: 24px; text-align: center; border-radius: 12px; border: 2px solid #e2e8f0; font-weight: bold; }
+        
+        .btn-principal {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* BARRA DE NAVEGACIÓN INFERIOR */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .nav-item.active { color: var(--secondary); }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; }
+
+        /* RANKING */
+        .fila-ranking {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .puesto-1 { background: #fef9c3; border: 1px solid #facc15; }
+
+        /* ZONA DIRECTOR */
+        .zona-director { display: none; background: #1e293b; color: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
     </style>
 </head>
 <body>
+
+    <header>
+        <h1 onclick="toqueSecreto()">🏆 Quiniela Familiar</h1>
+    </header>
+
     <div class="contenedor">
-        <h1 onclick="toqueSecreto()">🏆 Quiniela 2026 ⚽</h1>
-        <div class="etiqueta-hoy">PARTIDO ACTIVO</div>
         
-        <div class="partido" style="border-color: #4f46e5; border-width: 3px;">
-            <span id="textoEquipo1">Cargando...</span>
-            <input type="number" id="golesEq1" class="caja-goles" min="0" value="0">
-            <span>vs</span>
-            <input type="number" id="golesEq2" class="caja-goles" min="0" value="0">
-            <span id="textoEquipo2">Cargando...</span>
-        </div>
+        <section id="pestana-apuesta" class="seccion activa">
+            <div class="card">
+                <div class="etiqueta-viva">● PARTIDO ACTIVO</div>
+                <div class="partido-flex">
+                    <span id="equipo1" style="font-weight: bold;">Cargando...</span>
+                    <input type="number" id="goles1" class="caja-goles" value="0">
+                    <span>vs</span>
+                    <input type="number" id="goles2" class="caja-goles" value="0">
+                    <span id="equipo2" style="font-weight: bold;">Cargando...</span>
+                </div>
+                
+                <p>¿Quién eres?</p>
+                <select id="nombreUsuario" style="width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 20px;">
+                    <option value="Roberto">Roberto</option>
+                    <option value="Melissa">Melissa (Mamá)</option>
+                    <option value="Estuardo">Estuardo (Papá)</option>
+                    <option value="Luis">Luis (Hermano)</option>
+                </select>
 
-        <h3>¿Quién está apostando?</h3>
-        <select id="nombreApostador" class="caja-nombre">
-            <option value="Roberto">Roberto</option>
-            <option value="Melissa">Melissa (Mamá)</option>
-            <option value="Estuardo">Estuardo (Papá)</option>
-            <option value="Luis">Luis (Hermano)</option>
-        </select>
+                <button class="btn-principal" onclick="guardarApuesta()">Registrar Pronóstico</button>
+            </div>
 
-        <div id="alertaTiempoAgotado" class="alerta-tiempo">
-            ⏳ ¡TIEMPO AGOTADO! El partido ya empezó.
-        </div>
+            <h3>📡 Apuestas en directo</h3>
+            <div id="listaApuestas"></div>
+        </section>
 
-        <button id="botonGuardar" onclick="guardarApuesta()">¡Guardar Apuesta!</button>
-        <button class="boton-whatsapp" onclick="copiarParaWhatsApp()" style="margin-top: 15px;">📲 Invitar por WhatsApp</button>
+        <section id="pestana-posiciones" class="seccion">
+            <div class="card">
+                <h2 style="color: var(--primary);">Tabla de Honor</h2>
+                <div id="tablaCuerpo"></div>
+            </div>
+        </section>
 
-        <h3 style="margin-top: 30px;">📡 Apuestas Familiares (En Vivo):</h3>
-        <div id="zonaDeApuestas">Cargando apuestas...</div>
+        <section id="pestana-reglas" class="seccion">
+            <div class="card" style="text-align: left;">
+                <h2>📜 ¿Cómo jugar?</h2>
+                <p>1. Selecciona el partido del día.</p>
+                <p>2. Pon tu marcador antes de que empiece el juego.</p>
+                <p>3. <strong>Puntaje:</strong> Si le atinas al marcador exacto, ganas <strong>+3 puntos</strong>.</p>
+                <p>4. El Director reparte los puntos al final del partido.</p>
+            </div>
+        </section>
 
-        <button class="boton-tabla" onclick="mostrarTabla()">🏆 Ver Tabla de Posiciones 🏆</button>
-        <div id="zonaTabla" style="margin-top: 15px;"></div>
-
-        <div class="zona-director" id="consolaAdmin">
-            <h3>👑 Control Remoto del Director</h3>
-            <select id="selectorDirector" class="selector-director" onchange="cambiarPartidoEnLaNube()">
+        <div id="adminPanel" class="zona-director">
+            <h3 style="color: #38bdf8;">🔧 Consola de Director</h3>
+            <select id="selPartido" onchange="cambiarPartido()" style="width: 100%; padding: 10px; margin-bottom: 10px;">
                 <option value="0">🇲🇽 México vs Sudáfrica 🇿🇦</option>
-                <option value="1">🇨🇦 Canadá vs Repesca UEFA 🇪🇺</option>
+                <option value="1">🇨🇦 Canadá vs Repesca 🇪🇺</option>
                 <option value="2">🇺🇸 EE. UU. vs Paraguay 🇵🇾</option>
                 <option value="3">🇧🇷 Brasil vs Marruecos 🇲🇦</option>
                 <option value="4">🇪🇸 España vs Cabo Verde 🇨🇻</option>
                 <option value="5">🇦🇷 Argentina vs Argelia 🇩🇿</option>
-                <option value="6">⚽ Partido Vencido (Prueba)</option>
             </select>
-            <hr style="border-color: #334155; margin: 20px 0;">
-            <div class="partido" style="background-color: #0f172a; border: 1px solid #334155;">
-                <span id="directorEq1">🇲🇽</span>
-                <input type="number" id="realEq1" class="caja-goles" min="0" value="0" style="background: #1e293b; color: white;">
-                <span>vs</span>
-                <input type="number" id="realEq2" class="caja-goles" min="0" value="0" style="background: #1e293b; color: white;">
-                <span id="directorEq2">🇿🇦</span>
+            <p>Resultado Real:</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <input type="number" id="res1" class="caja-goles">
+                <input type="number" id="res2" class="caja-goles">
             </div>
-            <button onclick="calcularGanadores()" style="width: 100%; margin-top: 10px;">🥇 ¡Repartir Puntos!</button>
-            <button class="boton-rojo" onclick="reiniciarTodoElSistema()">🛑 BORRAR TODO</button>
-            <button onclick="ocultarConsola()" style="background-color: #475569; margin-top: 15px; width: 100%;">Cerrar Consola</button>
+            <button onclick="repartirPuntos()" style="background: #22c55e; width: 100%; margin-top: 15px; padding: 10px; border-radius: 10px; color: white; border: none; font-weight: bold;">🥇 Repartir Puntos</button>
+            <button onclick="borrarTodo()" style="background: #ef4444; width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px; color: white; border: none;">🛑 Reiniciar Sistema</button>
         </div>
+
     </div>
 
-    <script>
-        // --- SEGURIDAD ---
-        let contadorToques = 0;
-        let temporizadorToques;
-        function toqueSecreto() {
-            contadorToques++;
-            clearTimeout(temporizadorToques);
-            if (contadorToques === 3) { contadorToques = 0; pedirPassword(); }
-            else { temporizadorToques = setTimeout(() => { contadorToques = 0; }, 1000); }
-        }
-        function pedirPassword() {
-            Swal.fire({ title: '🔒 Acceso de Director', input: 'password', showCancelButton: true, confirmButtonColor: '#1e293b' }).then((result) => {
-                if (result.isConfirmed && result.value === "roberto2026") { document.getElementById("consolaAdmin").style.display = "block"; }
-            });
-        }
-        function ocultarConsola() { document.getElementById("consolaAdmin").style.display = "none"; }
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="cambiarPestana('pestana-apuesta', this)">
+            <span class="nav-icon">⚽</span>
+            <span>Jugar</span>
+        </div>
+        <div class="nav-item" onclick="cambiarPestana('pestana-posiciones', this)">
+            <span class="nav-icon">🏆</span>
+            <span>Ranking</span>
+        </div>
+        <div class="nav-item" onclick="cambiarPestana('pestana-reglas', this)">
+            <span class="nav-icon">📜</span>
+            <span>Reglas</span>
+        </div>
+    </nav>
 
-        // --- FIREBASE ---
+    <script>
+        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
           apiKey: "AIzaSyDlAsctjyrt4lW5UtRHfEHvH-70vxa_wxM",
           authDomain: "quiniela-familiar-7edd5.firebaseapp.com",
@@ -122,120 +227,138 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- AGENDA ---
+        // NAVEGACIÓN ENTRE PESTAÑAS
+        function cambiarPestana(id, el) {
+            document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+            document.getElementById(id).classList.add('activa');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // SEGURIDAD
+        let clics = 0;
+        function toqueSecreto() {
+            clics++;
+            if(clics === 3) {
+                clics = 0;
+                Swal.fire({title: 'Director', input: 'password'}).then(res => {
+                    if(res.value === "roberto2026") document.getElementById('adminPanel').style.display = 'block';
+                });
+            }
+            setTimeout(() => clics = 0, 1500);
+        }
+
+        // LÓGICA DE JUEGO
         let agenda = [
-            { eq1: "México", band1: "🇲🇽", eq2: "Sudáfrica", band2: "🇿🇦", fechaLimite: new Date(2026, 5, 11, 13, 0) }, 
-            { eq1: "Canadá", band1: "🇨🇦", eq2: "Repesca UEFA", band2: "🇪🇺", fechaLimite: new Date(2026, 5, 12, 15, 0) }, 
-            { eq1: "EE. UU.", band1: "🇺🇸", eq2: "Paraguay", band2: "🇵🇾", fechaLimite: new Date(2026, 5, 12, 18, 0) }, 
-            { eq1: "Brasil", band1: "🇧🇷", eq2: "Marruecos", band2: "🇲🇦", fechaLimite: new Date(2026, 5, 13, 18, 0) }, 
-            { eq1: "España", band1: "🇪🇸", eq2: "Cabo Verde", band2: "🇨🇻", fechaLimite: new Date(2026, 5, 15, 10, 0) }, 
-            { eq1: "Argentina", band1: "🇦🇷", eq2: "Argelia", band2: "🇩🇿", fechaLimite: new Date(2026, 5, 16, 21, 0) }, 
-            { eq1: "Prueba", band1: "⚙️", eq2: "Vencido", band2: "⏱️", fechaLimite: new Date(2023, 0, 1, 12, 0) } 
+            { e1: "México", b1: "🇲🇽", e2: "Sudáfrica", b2: "🇿🇦" },
+            { e1: "Canadá", b1: "🇨🇦", e2: "Repesca UEFA", b2: "🇪🇺" },
+            { e1: "EE. UU.", b1: "🇺🇸", e2: "Paraguay", b2: "🇵🇾" },
+            { e1: "Brasil", b1: "🇧🇷", e2: "Marruecos", b2: "🇲🇦" },
+            { e1: "España", b1: "🇪🇸", e2: "Cabo Verde", b2: "🇨🇻" },
+            { e1: "Argentina", b1: "🇦🇷", e2: "Argelia", b2: "🇩🇿" }
         ];
 
-        let memoriaApuestas = [];
-        let puntuacionFamiliar = { "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 };
-        let escuchadorApuestas = null;
-        let partidoActivoId = 0;
+        let pId = 0;
+        let puntos = { Roberto: 0, Melissa: 0, Estuardo: 0, Luis: 0 };
+        let misApuestas = [];
 
-        db.collection("sistema").doc("ranking").onSnapshot((doc) => { if (doc.exists) { puntuacionFamiliar = doc.data(); mostrarTabla(); } });
-        db.collection("sistema").doc("controlRemoto").onSnapshot((doc) => {
-            if (doc.exists) { partidoActivoId = doc.data().partidoActual; document.getElementById("selectorDirector").value = partidoActivoId; cargarPartido(partidoActivoId); }
+        // ESCUCHAR RANKING
+        db.collection("sistema").doc("ranking").onSnapshot(doc => {
+            if(doc.exists) { puntos = doc.data(); dibujarRanking(); }
         });
 
-        function cargarPartido(id) {
+        // ESCUCHAR CONTROL
+        db.collection("sistema").doc("controlRemoto").onSnapshot(doc => {
+            if(doc.exists) { 
+                pId = doc.data().partidoActual; 
+                actualizarInterfaz(pId);
+                escucharApuestas(pId);
+            }
+        });
+
+        function actualizarInterfaz(id) {
             let p = agenda[id];
-            document.getElementById("textoEquipo1").innerHTML = p.band1 + " <strong>" + p.eq1 + "</strong>";
-            document.getElementById("textoEquipo2").innerHTML = "<strong>" + p.eq2 + "</strong> " + p.band2;
-            document.getElementById("directorEq1").innerHTML = p.band1; document.getElementById("directorEq2").innerHTML = p.band2;
-            if (new Date() > p.fechaLimite) { document.getElementById("botonGuardar").style.display = "none"; document.getElementById("alertaTiempoAgotado").style.display = "block"; }
-            else { document.getElementById("botonGuardar").style.display = "inline-block"; document.getElementById("alertaTiempoAgotado").style.display = "none"; }
-            if(escuchadorApuestas) escuchadorApuestas();
-            escuchadorApuestas = db.collection("apuestas").where("partidoId", "==", id.toString()).onSnapshot((snap) => {
-                let texto = ""; memoriaApuestas = [];
-                snap.forEach((doc) => {
-                    let a = doc.data(); memoriaApuestas.push(a);
-                    texto += `<div class='apuesta-guardada'><strong>${a.nombrePersona}:</strong> ${p.eq1} ${a.goles1} - ${a.goles2} ${p.eq2}</div>`;
+            document.getElementById('equipo1').innerHTML = p.b1 + " " + p.e1;
+            document.getElementById('equipo2').innerHTML = p.e2 + " " + p.b2;
+            document.getElementById('selPartido').value = id;
+        }
+
+        function escucharApuestas(id) {
+            db.collection("apuestas").where("partidoId", "==", id.toString()).onSnapshot(snap => {
+                let html = ""; misApuestas = [];
+                snap.forEach(doc => {
+                    let a = doc.data();
+                    misApuestas.push(a);
+                    html += `<div class="fila-ranking" style="background:white; border:1px solid #eee;">
+                        <span><strong>${a.nombrePersona}</strong></span>
+                        <span>${a.goles1} - ${a.goles2}</span>
+                    </div>`;
                 });
-                document.getElementById("zonaDeApuestas").innerHTML = texto || "Sin apuestas...";
+                document.getElementById('listaApuestas').innerHTML = html || "<p>Nadie ha apostado aún</p>";
             });
         }
 
-        // --- ¡EL NUEVO ESCUDO ANTITRAMPA ESTÁ AQUÍ! ---
         async function guardarApuesta() {
-            let nombre = document.getElementById("nombreApostador").value;
-            let g1 = document.getElementById("golesEq1").value;
-            let g2 = document.getElementById("golesEq2").value;
+            let n = document.getElementById('nombreUsuario').value;
+            let g1 = document.getElementById('goles1').value;
+            let g2 = document.getElementById('goles2').value;
 
-            // 1. Preguntamos a Firebase si este nombre ya apostó en este partido
-            const consulta = await db.collection("apuestas")
-                                     .where("partidoId", "==", partidoActivoId.toString())
-                                     .where("nombrePersona", "==", nombre)
-                                     .get();
+            const check = await db.collection("apuestas").where("partidoId", "==", pId.toString()).where("nombrePersona", "==", n).get();
+            if(!check.empty) return Swal.fire('¡Ya apostaste!', 'No se permiten cambios.', 'error');
 
-            if (!consulta.empty) {
-                // Si la consulta NO está vacía, significa que ya existe una apuesta
-                Swal.fire({
-                    title: '¡Ya apostaste!',
-                    text: `Lo siento ${nombre}, ya tenemos registrado un resultado tuyo para este partido. ¡No se valen los cambios de última hora! 😉`,
-                    icon: 'error',
-                    confirmButtonColor: '#e11d48'
-                });
-                return; // Detenemos todo, no se guarda nada
-            }
-
-            // 2. Si pasó la prueba, guardamos normalmente
-            db.collection("apuestas").add({
-                nombrePersona: nombre,
-                partidoId: partidoActivoId.toString(),
-                goles1: g1, goles2: g2,
-                fecha: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            Swal.fire({ position: 'top-end', icon: 'success', title: 'Apuesta oficial guardada', showConfirmButton: false, timer: 1500 });
+            db.collection("apuestas").add({ nombrePersona: n, partidoId: pId.toString(), goles1: g1, goles2: g2 });
+            Swal.fire('¡Éxito!', 'Tu apuesta está en la nube', 'success');
         }
 
-        function cambiarPartidoEnLaNube() {
-            let nId = document.getElementById("selectorDirector").value;
-            db.collection("sistema").doc("controlRemoto").update({ partidoActual: parseInt(nId) });
+        function cambiarPartido() {
+            let val = document.getElementById('selPartido').value;
+            db.collection("sistema").doc("controlRemoto").update({ partidoActual: parseInt(val) });
         }
 
-        function calcularGanadores() {
-            let r1 = document.getElementById("realEq1").value;
-            let r2 = document.getElementById("realEq2").value;
-            let g = false;
-            for (let i = 0; i < memoriaApuestas.length; i++) {
-                if (memoriaApuestas[i].goles1 === r1 && memoriaApuestas[i].goles2 === r2) {
-                    puntuacionFamiliar[memoriaApuestas[i].nombrePersona] += 3; g = true;
+        function repartirPuntos() {
+            let r1 = document.getElementById('res1').value;
+            let r2 = document.getElementById('res2').value;
+            let ganoAlguien = false;
+
+            misApuestas.forEach(a => {
+                if(a.goles1 === r1 && a.goles2 === r2) {
+                    puntos[a.nombrePersona] += 3;
+                    ganoAlguien = true;
                 }
-            }
-            db.collection("sistema").doc("ranking").set(puntuacionFamiliar);
-            if (g) { confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } }); Swal.fire('¡GANADOR!', 'Puntos sumados.', 'success'); }
-            else { Swal.fire('Fin del juego', 'Nadie acertó.', 'info'); }
-        }
-
-        function mostrarTabla() {
-            let lista = Object.keys(puntuacionFamiliar).map(key => ({ nombre: key, puntos: puntuacionFamiliar[key] }));
-            lista.sort((a, b) => b.puntos - a.puntos);
-            let html = "<h3 style='color: #c026d3;'>🌟 Ranking Familiar 🌟</h3>";
-            lista.forEach((p, i) => {
-                html += `<div class='fila-posicion'><span>${i+1}° ${p.nombre}</span><span><strong>${p.puntos} pts</strong></span></div>`;
             });
-            document.getElementById("zonaTabla").innerHTML = html;
+
+            db.collection("sistema").doc("ranking").set(puntos);
+            if(ganoAlguien) {
+                confetti({particleCount: 150});
+                Swal.fire('¡Ganadores!', 'Puntos actualizados', 'success');
+            } else {
+                Swal.fire('Nadie acertó', 'Más suerte la próxima', 'info');
+            }
         }
 
-        function reiniciarTodoElSistema() {
-            Swal.fire({ title: '¿Borrar todo?', text: "Se borrarán apuestas y puntos.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then((result) => {
-                if (result.isConfirmed) {
-                    db.collection("sistema").doc("ranking").set({ "Roberto": 0, "Melissa": 0, "Estuardo": 0, "Luis": 0 });
-                    db.collection("apuestas").get().then((q) => { q.forEach((d) => { d.ref.delete(); }); });
-                    Swal.fire('Limpio', 'Sistema reiniciado.', 'success');
-                    ocultarConsola();
+        function dibujarRanking() {
+            let lista = Object.keys(puntos).map(k => ({n: k, p: puntos[k]}));
+            lista.sort((a,b) => b.p - a.p);
+            let h = "";
+            lista.forEach((u, i) => {
+                let clase = i === 0 ? 'puesto-1' : '';
+                h += `<div class="fila-ranking ${clase}">
+                    <span>${i+1}° ${u.n}</span>
+                    <span><strong>${u.p} pts</strong></span>
+                </div>`;
+            });
+            document.getElementById('tablaCuerpo').innerHTML = h;
+        }
+
+        function borrarTodo() {
+            Swal.fire({title: '¿Borrar todo?', icon: 'warning', showCancelButton: true}).then(res => {
+                if(res.isConfirmed) {
+                    db.collection("sistema").doc("ranking").set({Roberto:0, Melissa:0, Estuardo:0, Luis:0});
+                    db.collection("apuestas").get().then(q => q.forEach(d => d.ref.delete()));
+                    Swal.fire('Limpio');
                 }
-            })
+            });
         }
-
-        window.onload = () => cargarPartido(partidoActivoId);
     </script>
 </body>
 </html>
