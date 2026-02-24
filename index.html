@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,211 +11,86 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        :root {
-            --primary: #1e3a8a;
-            --secondary: #4f46e5;
-            --accent: #d946ef;
-            --bg: #f1f5f9;
-        }
-
-        body { 
-            background: var(--bg); 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            padding-bottom: 80px; /* Espacio para la barra inferior */
-        }
-
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            border-radius: 0 0 25px 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        h1 { margin: 0; font-size: 24px; cursor: pointer; }
-
-        .contenedor { padding: 20px; max-width: 500px; margin: 0 auto; }
-
-        /* ESTILO DE LAS PESTAÑAS (SECCIONES) */
-        .seccion { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .activa { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* TARJETAS */
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        .etiqueta-viva {
-            background: #ef4444;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        /* INPUTS Y BOTONES */
-        .partido-flex { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
-        .caja-goles { width: 50px; height: 50px; font-size: 24px; text-align: center; border-radius: 12px; border: 2px solid #e2e8f0; font-weight: bold; }
+        :root { --primary: #1e3a8a; --secondary: #4f46e5; --bg: #f1f5f9; }
+        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; }
+        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 25px 25px; sticky: top; }
+        .contenedor { padding: 15px; max-width: 500px; margin: 0 auto; }
         
-        .btn-principal {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        /* PESTAÑAS */
+        .seccion { display: none; animation: fadeIn 0.3s; }
+        .activa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* BARRA DE NAVEGACIÓN INFERIOR */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        /* TARJETAS DE PARTIDO */
+        .card-partido {
             background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: #94a3b8;
-            font-size: 12px;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .nav-item.active { color: var(--secondary); }
-        .nav-icon { font-size: 20px; margin-bottom: 4px; }
-
-        /* RANKING */
-        .fila-ranking {
-            display: flex;
-            justify-content: space-between;
+            border-radius: 20px;
             padding: 15px;
-            background: #f8fafc;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
+        .info-fecha { font-size: 12px; color: #64748b; margin-bottom: 10px; font-weight: bold; }
+        .fila-equipos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .bloque-equipo { flex: 1; text-align: center; font-weight: bold; font-size: 14px; }
+        .vs { color: #94a3b8; font-size: 12px; margin: 0 10px; }
+        
+        .input-goles { width: 45px; height: 40px; text-align: center; font-size: 20px; border-radius: 8px; border: 2px solid #cbd5e1; font-weight: bold; }
+        
+        .btn-apostar { 
+            background: var(--secondary); color: white; border: none; width: 100%; padding: 10px; 
+            border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-apostar:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-        .puesto-1 { background: #fef9c3; border: 1px solid #facc15; }
-
-        /* ZONA DIRECTOR */
-        .zona-director { display: none; background: #1e293b; color: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        /* NAV BAR */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); }
+        .nav-item { color: #94a3b8; font-size: 12px; text-align: center; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--secondary); }
+        
+        .zona-admin { display: none; background: #1e293b; color: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        .tag-vencido { background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 5px; font-size: 10px; }
+        .tag-abierto { background: #dcfce7; color: #22c55e; padding: 2px 8px; border-radius: 5px; font-size: 10px; }
     </style>
 </head>
 <body>
 
     <header>
         <h1 onclick="toqueSecreto()">🏆 Quiniela Familiar</h1>
+        <select id="userGlobal" style="padding: 5px; border-radius: 10px; margin-top: 10px;">
+            <option value="Roberto">Soy Roberto</option>
+            <option value="Melissa">Soy Melissa</option>
+            <option value="Estuardo">Soy Estuardo</option>
+            <option value="Luis">Soy Luis</option>
+        </select>
     </header>
 
     <div class="contenedor">
         
-        <section id="pestana-apuesta" class="seccion activa">
-            <div class="card">
-                <div class="etiqueta-viva">● PARTIDO ACTIVO</div>
-                <div class="partido-flex">
-                    <span id="equipo1" style="font-weight: bold;">Cargando...</span>
-                    <input type="number" id="goles1" class="caja-goles" value="0">
-                    <span>vs</span>
-                    <input type="number" id="goles2" class="caja-goles" value="0">
-                    <span id="equipo2" style="font-weight: bold;">Cargando...</span>
-                </div>
-                
-                <p>¿Quién eres?</p>
-                <select id="nombreUsuario" style="width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 20px;">
-                    <option value="Roberto">Roberto</option>
-                    <option value="Melissa">Melissa (Mamá)</option>
-                    <option value="Estuardo">Estuardo (Papá)</option>
-                    <option value="Luis">Luis (Hermano)</option>
-                </select>
-
-                <button class="btn-principal" onclick="guardarApuesta()">Registrar Pronóstico</button>
-            </div>
-
-            <h3>📡 Apuestas en directo</h3>
-            <div id="listaApuestas"></div>
+        <section id="pestana-jugar" class="seccion activa">
+            <h3 style="color: #334155;">Próximos Partidos</h3>
+            <div id="cartelera"></div>
         </section>
 
-        <section id="pestana-posiciones" class="seccion">
-            <div class="card">
-                <h2 style="color: var(--primary);">Tabla de Honor</h2>
-                <div id="tablaCuerpo"></div>
-            </div>
+        <section id="pestana-ranking" class="seccion">
+            <div id="tablaRanking"></div>
         </section>
 
-        <section id="pestana-reglas" class="seccion">
-            <div class="card" style="text-align: left;">
-                <h2>📜 ¿Cómo jugar?</h2>
-                <p>1. Selecciona el partido del día.</p>
-                <p>2. Pon tu marcador antes de que empiece el juego.</p>
-                <p>3. <strong>Puntaje:</strong> Si le atinas al marcador exacto, ganas <strong>+3 puntos</strong>.</p>
-                <p>4. El Director reparte los puntos al final del partido.</p>
-            </div>
-        </section>
-
-        <div id="adminPanel" class="zona-director">
-            <h3 style="color: #38bdf8;">🔧 Consola de Director</h3>
-            <select id="selPartido" onchange="cambiarPartido()" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-                <option value="0">🇲🇽 México vs Sudáfrica 🇿🇦</option>
-                <option value="1">🇨🇦 Canadá vs Repesca 🇪🇺</option>
-                <option value="2">🇺🇸 EE. UU. vs Paraguay 🇵🇾</option>
-                <option value="3">🇧🇷 Brasil vs Marruecos 🇲🇦</option>
-                <option value="4">🇪🇸 España vs Cabo Verde 🇨🇻</option>
-                <option value="5">🇦🇷 Argentina vs Argelia 🇩🇿</option>
-            </select>
-            <p>Resultado Real:</p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <input type="number" id="res1" class="caja-goles">
-                <input type="number" id="res2" class="caja-goles">
-            </div>
-            <button onclick="repartirPuntos()" style="background: #22c55e; width: 100%; margin-top: 15px; padding: 10px; border-radius: 10px; color: white; border: none; font-weight: bold;">🥇 Repartir Puntos</button>
-            <button onclick="borrarTodo()" style="background: #ef4444; width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px; color: white; border: none;">🛑 Reiniciar Sistema</button>
+        <div id="panelAdmin" class="zona-admin">
+            <h3>👑 Modo Dios (Director)</h3>
+            <div id="adminPartidos"></div>
+            <button onclick="document.getElementById('panelAdmin').style.display='none'" style="width:100%; margin-top:10px;">Cerrar Panel</button>
         </div>
 
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active" onclick="cambiarPestana('pestana-apuesta', this)">
-            <span class="nav-icon">⚽</span>
-            <span>Jugar</span>
-        </div>
-        <div class="nav-item" onclick="cambiarPestana('pestana-posiciones', this)">
-            <span class="nav-icon">🏆</span>
-            <span>Ranking</span>
-        </div>
-        <div class="nav-item" onclick="cambiarPestana('pestana-reglas', this)">
-            <span class="nav-icon">📜</span>
-            <span>Reglas</span>
-        </div>
+        <div class="nav-item active" onclick="navegar('pestana-jugar', this)"><div>⚽</div>Jugar</div>
+        <div class="nav-item" onclick="navegar('pestana-ranking', this)"><div>🏆</div>Ranking</div>
     </nav>
 
     <script>
-        // CONFIGURACIÓN FIREBASE
+        // CONFIG
         const firebaseConfig = {
           apiKey: "AIzaSyDlAsctjyrt4lW5UtRHfEHvH-70vxa_wxM",
           authDomain: "quiniela-familiar-7edd5.firebaseapp.com",
@@ -227,137 +102,139 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // NAVEGACIÓN ENTRE PESTAÑAS
-        function cambiarPestana(id, el) {
+        // AGENDA DE PARTIDOS (AQUÍ PUEDES METER LOS 100 JUEGOS)
+        const agenda = [
+            { id: 0, e1: "México", b1: "🇲🇽", e2: "Sudáfrica", b2: "🇿🇦", fecha: new Date(2026, 5, 11, 13, 0) },
+            { id: 1, e1: "Canadá", b1: "🇨🇦", e2: "Repesca", b2: "🇪🇺", fecha: new Date(2026, 5, 12, 15, 0) },
+            { id: 2, e1: "EE. UU.", b1: "🇺🇸", e2: "Paraguay", b2: "🇵🇾", fecha: new Date(2026, 5, 12, 18, 0) },
+            { id: 3, e1: "Prueba Pasada", b1: "🕰️", e2: "Vencido", b2: "🚫", fecha: new Date(2023, 0, 1, 12, 0) }
+        ];
+
+        let misApuestasRealizadas = [];
+        let rankingActual = {};
+
+        // INICIO
+        function navegar(id, el) {
             document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
             document.getElementById(id).classList.add('activa');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
         }
 
-        // SEGURIDAD
-        let clics = 0;
-        function toqueSecreto() {
-            clics++;
-            if(clics === 3) {
-                clics = 0;
-                Swal.fire({title: 'Director', input: 'password'}).then(res => {
-                    if(res.value === "roberto2026") document.getElementById('adminPanel').style.display = 'block';
-                });
-            }
-            setTimeout(() => clics = 0, 1500);
-        }
-
-        // LÓGICA DE JUEGO
-        let agenda = [
-            { e1: "México", b1: "🇲🇽", e2: "Sudáfrica", b2: "🇿🇦" },
-            { e1: "Canadá", b1: "🇨🇦", e2: "Repesca UEFA", b2: "🇪🇺" },
-            { e1: "EE. UU.", b1: "🇺🇸", e2: "Paraguay", b2: "🇵🇾" },
-            { e1: "Brasil", b1: "🇧🇷", e2: "Marruecos", b2: "🇲🇦" },
-            { e1: "España", b1: "🇪🇸", e2: "Cabo Verde", b2: "🇨🇻" },
-            { e1: "Argentina", b1: "🇦🇷", e2: "Argelia", b2: "🇩🇿" }
-        ];
-
-        let pId = 0;
-        let puntos = { Roberto: 0, Melissa: 0, Estuardo: 0, Luis: 0 };
-        let misApuestas = [];
-
-        // ESCUCHAR RANKING
+        // CARGAR DATOS
         db.collection("sistema").doc("ranking").onSnapshot(doc => {
-            if(doc.exists) { puntos = doc.data(); dibujarRanking(); }
+            rankingActual = doc.data() || { Roberto:0, Melissa:0, Estuardo:0, Luis:0 };
+            dibujarRanking();
         });
 
-        // ESCUCHAR CONTROL
-        db.collection("sistema").doc("controlRemoto").onSnapshot(doc => {
-            if(doc.exists) { 
-                pId = doc.data().partidoActual; 
-                actualizarInterfaz(pId);
-                escucharApuestas(pId);
-            }
+        // ESCUCHAR TODAS LAS APUESTAS DEL USUARIO PARA PONER "CHECKS"
+        db.collection("apuestas").onSnapshot(snap => {
+            misApuestasRealizadas = [];
+            snap.forEach(d => misApuestasRealizadas.push(d.data()));
+            dibujarCartelera();
+            dibujarAdmin();
         });
 
-        function actualizarInterfaz(id) {
-            let p = agenda[id];
-            document.getElementById('equipo1').innerHTML = p.b1 + " " + p.e1;
-            document.getElementById('equipo2').innerHTML = p.e2 + " " + p.b2;
-            document.getElementById('selPartido').value = id;
-        }
+        function dibujarCartelera() {
+            let html = "";
+            let usuario = document.getElementById('userGlobal').value;
 
-        function escucharApuestas(id) {
-            db.collection("apuestas").where("partidoId", "==", id.toString()).onSnapshot(snap => {
-                let html = ""; misApuestas = [];
-                snap.forEach(doc => {
-                    let a = doc.data();
-                    misApuestas.push(a);
-                    html += `<div class="fila-ranking" style="background:white; border:1px solid #eee;">
-                        <span><strong>${a.nombrePersona}</strong></span>
-                        <span>${a.goles1} - ${a.goles2}</span>
-                    </div>`;
-                });
-                document.getElementById('listaApuestas').innerHTML = html || "<p>Nadie ha apostado aún</p>";
+            agenda.sort((a,b) => a.fecha - b.fecha).forEach(p => {
+                const yaAposto = misApuestasRealizadas.find(a => a.partidoId == p.id && a.nombrePersona == usuario);
+                const esVencido = new Date() > p.fecha;
+                
+                html += `
+                <div class="card-partido">
+                    <div class="info-fecha">
+                        ${p.fecha.toLocaleString()} 
+                        <span class="${esVencido ? 'tag-vencido' : 'tag-abierto'}">${esVencido ? 'CERRADO' : 'ABIERTO'}</span>
+                    </div>
+                    <div class="fila-equipos">
+                        <div class="bloque-equipo">${p.b1}<br>${p.e1}</div>
+                        <input type="number" id="g1-${p.id}" class="input-goles" value="${yaAposto ? yaAposto.goles1 : 0}" ${yaAposto || esVencido ? 'disabled' : ''}>
+                        <div class="vs">vs</div>
+                        <input type="number" id="g2-${p.id}" class="input-goles" value="${yaAposto ? yaAposto.goles2 : 0}" ${yaAposto || esVencido ? 'disabled' : ''}>
+                        <div class="bloque-equipo">${p.b2}<br>${p.e2}</div>
+                    </div>
+                    ${yaAposto 
+                        ? `<div style="color: #22c55e; font-size: 12px; font-weight: bold;">✅ Apuesta registrada</div>` 
+                        : `<button class="btn-apostar" onclick="enviarApuesta(${p.id})" ${esVencido ? 'disabled' : ''}>${esVencido ? 'Tiempo Agotado' : 'Guardar Apuesta'}</button>`
+                    }
+                </div>`;
             });
+            document.getElementById('cartelera').innerHTML = html;
         }
 
-        async function guardarApuesta() {
-            let n = document.getElementById('nombreUsuario').value;
-            let g1 = document.getElementById('goles1').value;
-            let g2 = document.getElementById('goles2').value;
+        async function enviarApuesta(id) {
+            let usuario = document.getElementById('userGlobal').value;
+            let g1 = document.getElementById(`g1-${id}`).value;
+            let g2 = document.getElementById(`g2-${id}`).value;
 
-            const check = await db.collection("apuestas").where("partidoId", "==", pId.toString()).where("nombrePersona", "==", n).get();
-            if(!check.empty) return Swal.fire('¡Ya apostaste!', 'No se permiten cambios.', 'error');
-
-            db.collection("apuestas").add({ nombrePersona: n, partidoId: pId.toString(), goles1: g1, goles2: g2 });
-            Swal.fire('¡Éxito!', 'Tu apuesta está en la nube', 'success');
-        }
-
-        function cambiarPartido() {
-            let val = document.getElementById('selPartido').value;
-            db.collection("sistema").doc("controlRemoto").update({ partidoActual: parseInt(val) });
-        }
-
-        function repartirPuntos() {
-            let r1 = document.getElementById('res1').value;
-            let r2 = document.getElementById('res2').value;
-            let ganoAlguien = false;
-
-            misApuestas.forEach(a => {
-                if(a.goles1 === r1 && a.goles2 === r2) {
-                    puntos[a.nombrePersona] += 3;
-                    ganoAlguien = true;
-                }
+            await db.collection("apuestas").add({
+                nombrePersona: usuario,
+                partidoId: id,
+                goles1: g1,
+                goles2: g2,
+                fechaEnvio: new Date()
             });
-
-            db.collection("sistema").doc("ranking").set(puntos);
-            if(ganoAlguien) {
-                confetti({particleCount: 150});
-                Swal.fire('¡Ganadores!', 'Puntos actualizados', 'success');
-            } else {
-                Swal.fire('Nadie acertó', 'Más suerte la próxima', 'info');
-            }
+            Swal.fire('¡Listo!', 'Apuesta guardada para este partido', 'success');
         }
 
         function dibujarRanking() {
-            let lista = Object.keys(puntos).map(k => ({n: k, p: puntos[k]}));
+            let lista = Object.keys(rankingActual).map(k => ({n: k, p: rankingActual[k]}));
             lista.sort((a,b) => b.p - a.p);
-            let h = "";
+            let h = "<h2 style='text-align:center;'>🏆 Tabla General</h2>";
             lista.forEach((u, i) => {
-                let clase = i === 0 ? 'puesto-1' : '';
-                h += `<div class="fila-ranking ${clase}">
+                h += `<div style="display:flex; justify-content:space-between; background:white; padding:15px; margin-bottom:10px; border-radius:15px; border-left: 5px solid ${i==0?'#facc15':'#4f46e5'}">
                     <span>${i+1}° ${u.n}</span>
                     <span><strong>${u.p} pts</strong></span>
                 </div>`;
             });
-            document.getElementById('tablaCuerpo').innerHTML = h;
+            document.getElementById('tablaRanking').innerHTML = h;
         }
 
-        function borrarTodo() {
-            Swal.fire({title: '¿Borrar todo?', icon: 'warning', showCancelButton: true}).then(res => {
-                if(res.isConfirmed) {
-                    db.collection("sistema").doc("ranking").set({Roberto:0, Melissa:0, Estuardo:0, Luis:0});
-                    db.collection("apuestas").get().then(q => q.forEach(d => d.ref.delete()));
-                    Swal.fire('Limpio');
+        // SECCIÓN DIRECTOR MEJORADA
+        function dibujarAdmin() {
+            let h = "";
+            agenda.forEach(p => {
+                h += `
+                <div style="background:#334155; padding:10px; margin-bottom:10px; border-radius:10px;">
+                    <div style="font-size:11px;">${p.e1} vs ${p.e2}</div>
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <input type="number" id="res1-${p.id}" style="width:40px;" placeholder="G1">
+                        <input type="number" id="res2-${p.id}" style="width:40px;" placeholder="G2">
+                        <button onclick="calificar(${p.id})" style="background:#22c55e; color:white; border:none; padding:5px; font-size:10px; border-radius:5px;">Calificar</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('adminPartidos').innerHTML = h;
+        }
+
+        function calificar(id) {
+            let r1 = document.getElementById(`res1-${id}`).value;
+            let r2 = document.getElementById(`res2-${id}`).value;
+            let huboGanadores = false;
+
+            misApuestasRealizadas.forEach(a => {
+                if(a.partidoId == id && a.goles1 == r1 && a.goles2 == r2) {
+                    rankingActual[a.nombrePersona] += 3;
+                    huboGanadores = true;
                 }
             });
+
+            db.collection("sistema").doc("ranking").set(rankingActual);
+            Swal.fire('Calificado', 'Puntos repartidos', 'success');
+        }
+
+        let clicks = 0;
+        function toqueSecreto() {
+            clicks++;
+            if(clicks === 3) {
+                Swal.fire({title:'Contraseña', input:'password'}).then(res => {
+                    if(res.value === 'roberto2026') document.getElementById('panelAdmin').style.display='block';
+                });
+            }
+            setTimeout(() => clicks = 0, 1000);
         }
     </script>
 </body>
