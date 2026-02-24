@@ -13,28 +13,107 @@
     <style>
         :root { --primary: #1e3a8a; --secondary: #4f46e5; --bg: #f1f5f9; }
         body { background: var(--bg); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; }
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 25px 25px; position: sticky; top: 0; z-index: 1000; }
+        
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 0 0 25px 25px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        h1 { margin: 0; font-size: 22px; cursor: pointer; user-select: none; }
+
         .contenedor { padding: 15px; max-width: 500px; margin: 0 auto; }
+        
         .seccion { display: none; animation: fadeIn 0.3s; }
         .activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-partido { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        .info-fecha { font-size: 12px; color: #64748b; margin-bottom: 10px; font-weight: bold; }
+
+        .card-partido {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        
+        .info-fecha { font-size: 11px; color: #64748b; margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
+        
         .fila-equipos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .bloque-equipo { flex: 1; text-align: center; font-weight: bold; font-size: 14px; }
-        .input-goles { width: 45px; height: 40px; text-align: center; font-size: 20px; border-radius: 8px; border: 2px solid #cbd5e1; font-weight: bold; }
-        .btn-apostar { background: var(--secondary); color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); }
-        .nav-item { color: #94a3b8; font-size: 12px; text-align: center; cursor: pointer; flex: 1; }
+        
+        .input-goles { 
+            width: 45px; 
+            height: 40px; 
+            text-align: center; 
+            font-size: 20px; 
+            border-radius: 8px; 
+            border: 2px solid #cbd5e1; 
+            font-weight: bold; 
+            background: #fff;
+        }
+        
+        .btn-apostar { 
+            background: var(--secondary); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+
+        .nav-bar { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1); 
+        }
+        
+        .nav-item { color: #94a3b8; font-size: 11px; text-align: center; cursor: pointer; flex: 1; font-weight: bold; }
         .nav-item.active { color: var(--secondary); }
-        .zona-admin { display: none; background: #1e293b; color: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+        
+        .zona-admin { 
+            display: none; 
+            background: #1e293b; 
+            color: white; 
+            padding: 20px; 
+            border-radius: 20px; 
+            margin-top: 20px; 
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .fila-ranking {
+            display: flex; 
+            justify-content: space-between; 
+            background: white; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-radius: 15px; 
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1 onclick="toqueSecreto()">🏆 Quiniela Familiar</h1>
-        <select id="userGlobal" onchange="cambioDeUsuario()" style="padding: 10px; border-radius: 10px; margin-top: 10px; border: 2px solid #60efff;">
+        <select id="userGlobal" onchange="cambioDeUsuario()" style="padding: 8px; border-radius: 10px; margin-top: 12px; border: none; width: 60%; font-weight: bold; color: var(--primary);">
             <option value="">¿Quién eres?</option>
             <option value="Roberto">Soy Roberto</option>
             <option value="Melissa">Soy Melissa</option>
@@ -45,7 +124,7 @@
 
     <div class="contenedor">
         <section id="pestana-jugar" class="seccion activa">
-            <h3 id="mensajeBienvenida" style="color: #334155; text-align: center;">¡Bienvenido!</h3>
+            <h3 id="mensajeBienvenida" style="color: #334155; text-align: center; margin-bottom: 20px;">¡Hola! Elige tu nombre arriba</h3>
             <div id="cartelera"></div>
         </section>
 
@@ -54,19 +133,20 @@
         </section>
 
         <div id="panelAdmin" class="zona-admin">
-            <h3>👑 Modo Dios (Director)</h3>
+            <h3 style="text-align: center;">👑 Modo Dios (Director)</h3>
             <div id="adminPartidos"></div>
-            <button onclick="reiniciarSistema()" style="background:#ef4444; color:white; border:none; width:100%; padding:12px; border-radius:10px; font-weight:bold; margin-top:20px;">🛑 Reiniciar Sistema</button>
+            <button onclick="reiniciarSistema()" style="background:#ef4444; color:white; border:none; width:100%; padding:12px; border-radius:10px; font-weight:bold; margin-top:20px;">🛑 Reiniciar Sistema Completo</button>
             <button onclick="document.getElementById('panelAdmin').style.display='none'" style="width:100%; margin-top:10px; background:#475569; color:white; border:none; padding:10px; border-radius:10px;">Cerrar Panel</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active" onclick="navegar('pestana-jugar', this)"><div>⚽</div>Jugar</div>
-        <div class="nav-item" onclick="navegar('pestana-ranking', this)"><div>🏆</div>Ranking</div>
+        <div class="nav-item active" onclick="navegar('pestana-jugar', this)"><span class="nav-icon">⚽</span>Jugar</div>
+        <div class="nav-item" onclick="navegar('pestana-ranking', this)"><span class="nav-icon">🏆</span>Ranking</div>
     </nav>
 
     <script>
+        // 1. CONFIGURACION FIREBASE
         const firebaseConfig = {
           apiKey: "AIzaSyDlAsctjyrt4lW5UtRHfEHvH-70vxa_wxM",
           authDomain: "quiniela-familiar-7edd5.firebaseapp.com",
@@ -75,9 +155,10 @@
           messagingSenderId: "1076654812047",
           appId: "1:1076654812047:web:850f1728a80b188a63b9fa"
         };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
+        // 2. AGENDA OFICIAL
         const agenda = [
             { id: 0, e1: "México", b1: "🇲🇽", e2: "Sudáfrica", b2: "🇿🇦", fecha: new Date(2026, 5, 11, 13, 0) },
             { id: 1, e1: "Canadá", b1: "🇨🇦", e2: "Repesca", b2: "🇪🇺", fecha: new Date(2026, 5, 12, 15, 0) },
@@ -89,7 +170,7 @@
         let rankingActual = {};
         let resultadosOficiales = {};
 
-        // INICIO: Escuchar todo
+        // 3. ESCUCHADORES EN TIEMPO REAL
         db.collection("sistema").doc("ranking").onSnapshot(doc => {
             rankingActual = doc.data() || { Roberto:0, Melissa:0, Estuardo:0, Luis:0 };
             dibujarRanking();
@@ -97,6 +178,7 @@
 
         db.collection("sistema").doc("resultados").onSnapshot(doc => {
             resultadosOficiales = doc.data() || {};
+            dibujarCartelera(); // Redibujar para aplicar el velo de misterio
         });
 
         db.collection("apuestas").onSnapshot(snap => {
@@ -106,6 +188,7 @@
             dibujarAdmin();
         });
 
+        // 4. FUNCIONES DE INTERFAZ
         function navegar(id, el) {
             document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
             document.getElementById(id).classList.add('activa');
@@ -116,7 +199,6 @@
         function cambioDeUsuario() {
             let usuario = document.getElementById('userGlobal').value;
             if (!usuario) return;
-            
             dibujarCartelera();
             document.getElementById('mensajeBienvenida').innerText = "¡Hola, " + usuario + "!";
             revisarNoticias(usuario);
@@ -125,92 +207,84 @@
         async function revisarNoticias(nombre) {
             let aciertos = 0;
             let totalCalificados = 0;
-            let ultimoPartido = "";
-
             misApuestasRealizadas.forEach(apuesta => {
                 if (apuesta.nombrePersona === nombre) {
                     let resReal = resultadosOficiales[apuesta.partidoId];
                     if (resReal) {
                         totalCalificados++;
-                        if (apuesta.goles1 == resReal.g1 && apuesta.goles2 == resReal.g2) {
-                            aciertos++;
-                            let pInfo = agenda.find(x => x.id == apuesta.partidoId);
-                            ultimoPartido = pInfo.e1 + " vs " + pInfo.e2;
-                        }
+                        if (apuesta.goles1 == resReal.g1 && apuesta.goles2 == resReal.g2) aciertos++;
                     }
                 }
             });
-
-            if (totalCalificados > 0) {
-                if (aciertos > 0) {
-                    Swal.fire({
-                        title: '¡Excelentes noticias!',
-                        html: `Has acertado <b>${aciertos}</b> resultado(s) de los partidos calificados.<br>¡Buen ojo, experto!`,
-                        icon: 'success',
-                        confirmButtonColor: '#4f46e5'
-                    });
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                } else {
-                    Swal.fire({
-                        title: 'Resumen de puntos',
-                        text: 'Aún no has acertado el marcador exacto de los últimos partidos. ¡No te rindas, la próxima le atinas!',
-                        icon: 'info'
-                    });
-                }
+            if (totalCalificados > 0 && aciertos > 0) {
+                Swal.fire({ title: '¡GOLAZO!', html: `Has acertado <b>${aciertos}</b> marcador(es).`, icon: 'success' });
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             }
         }
 
         function dibujarCartelera() {
             let html = "";
             let usuario = document.getElementById('userGlobal').value;
+            
             agenda.sort((a,b) => a.fecha - b.fecha).forEach(p => {
                 const yaAposto = misApuestasRealizadas.find(a => a.partidoId == p.id && a.nombrePersona == usuario);
                 const esVencido = new Date() > p.fecha;
                 const resReal = resultadosOficiales[p.id];
+                
+                // VELO DE MISTERIO: Solo mostrar resultado real si ya apostó o si ya venció el tiempo
+                const mostrarResOficial = resReal && (yaAposto || esVencido);
 
                 html += `
-                <div class="card-partido" style="${resReal ? 'border-color: #22c55e; background: #f0fdf4;' : ''}">
+                <div class="card-partido" style="${mostrarResOficial ? 'border-color: #22c55e; background: #f0fdf4;' : ''}">
                     <div class="info-fecha">${p.fecha.toLocaleString()}</div>
                     <div class="fila-equipos">
                         <div class="bloque-equipo">${p.b1}<br>${p.e1}</div>
                         <input type="number" id="g1-${p.id}" class="input-goles" value="${yaAposto ? yaAposto.goles1 : 0}" ${yaAposto || esVencido ? 'disabled' : ''}>
-                        <span>vs</span>
+                        <span style="color:#94a3b8">vs</span>
                         <input type="number" id="g2-${p.id}" class="input-goles" value="${yaAposto ? yaAposto.goles2 : 0}" ${yaAposto || esVencido ? 'disabled' : ''}>
                         <div class="bloque-equipo">${p.b2}<br>${p.e2}</div>
                     </div>
-                    ${resReal ? `<div style="color: #166534; font-size: 14px; font-weight: bold;">Resultado Real: ${resReal.g1} - ${resReal.g2}</div>` : ''}
-                    ${yaAposto && !resReal ? `<div style="color: #4f46e5; font-size: 12px; font-weight: bold;">✅ Pronóstico guardado</div>` : ''}
+                    ${mostrarResOficial ? `<div style="color: #166534; font-size: 14px; font-weight: bold; margin-bottom:10px;">⚽ Resultado Real: ${resReal.g1} - ${resReal.g2}</div>` : ''}
+                    ${yaAposto && !mostrarResOficial ? `<div style="color: #4f46e5; font-size: 12px; font-weight: bold;">✅ Pronóstico guardado</div>` : ''}
                     ${!yaAposto && !esVencido ? `<button class="btn-apostar" onclick="enviarApuesta(${p.id})">Guardar Apuesta</button>` : ''}
-                    ${!yaAposto && esVencido && !resReal ? `<div style="color: #ef4444; font-size: 12px; font-weight: bold;">❌ No apostaste a tiempo</div>` : ''}
+                    ${!yaAposto && esVencido && !resReal ? `<div style="color: #ef4444; font-size: 12px; font-weight: bold;">❌ Tiempo agotado</div>` : ''}
                 </div>`;
             });
-            document.getElementById('cartelera').innerHTML = html;
+            document.getElementById('cartelera').innerHTML = html || "Cargando partidos...";
         }
 
         async function enviarApuesta(id) {
             let usuario = document.getElementById('userGlobal').value;
-            if(!usuario) return Swal.fire('Error', 'Primero selecciona tu nombre arriba', 'warning');
+            if(!usuario) return Swal.fire('Aviso', 'Selecciona tu nombre arriba primero', 'warning');
             let g1 = document.getElementById(`g1-${id}`).value;
             let g2 = document.getElementById(`g2-${id}`).value;
             await db.collection("apuestas").add({ nombrePersona: usuario, partidoId: id, goles1: g1, goles2: g2 });
-            Swal.fire('¡Éxito!', 'Apuesta enviada', 'success');
+            Swal.fire('¡Éxito!', 'Apuesta en la nube', 'success');
         }
 
         function dibujarRanking() {
             let lista = Object.keys(rankingActual).map(k => ({n: k, p: rankingActual[k]}));
             lista.sort((a,b) => b.p - a.p);
-            let h = "<h2 style='text-align:center;'>🏆 Tabla General</h2>";
+            let h = "<h2 style='text-align:center; color:var(--primary);'>🏆 Tabla General</h2>";
             lista.forEach((u, i) => {
-                h += `<div style="display:flex; justify-content:space-between; background:white; padding:15px; margin-bottom:10px; border-radius:15px; border-left: 5px solid ${i==0?'#facc15':'#4f46e5'}"><span>${i+1}° ${u.n}</span><span><strong>${u.p} pts</strong></span></div>`;
+                h += `<div class="fila-ranking" style="border-left: 6px solid ${i==0?'#facc15':'#4f46e5'}"><span>${i+1}° ${u.n}</span><span><strong>${u.p} pts</strong></span></div>`;
             });
             document.getElementById('tablaRanking').innerHTML = h;
         }
 
+        // 5. FUNCIONES DE DIRECTOR (MODO DIOS)
         function dibujarAdmin() {
             let h = "";
             agenda.forEach(p => {
                 let actual = resultadosOficiales[p.id] || {g1:'', g2:''};
-                h += `<div style="background:#334155; padding:10px; margin-bottom:10px; border-radius:10px;"><div style="font-size:11px;">${p.e1} vs ${p.e2}</div><div style="display:flex; gap:5px; margin-top:5px;"><input type="number" id="res1-${p.id}" value="${actual.g1}" style="width:40px;"><input type="number" id="res2-${p.id}" value="${actual.g2}" style="width:40px;"><button onclick="calificar(${p.id})" style="background:#22c55e; color:white; border:none; padding:5px; font-size:10px; border-radius:5px;">Calificar</button></div></div>`;
+                h += `<div style="background:#334155; padding:12px; margin-bottom:12px; border-radius:12px;">
+                    <div style="font-size:12px; margin-bottom:8px;">${p.e1} vs ${p.e2}</div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="number" id="res1-${p.id}" value="${actual.g1}" style="width:45px; height:35px; text-align:center; border-radius:5px;">
+                        <input type="number" id="res2-${p.id}" value="${actual.g2}" style="width:45px; height:35px; text-align:center; border-radius:5px;">
+                        <button onclick="calificar(${p.id})" style="background:#22c55e; color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer;">Calificar</button>
+                    </div>
+                </div>`;
             });
             document.getElementById('adminPartidos').innerHTML = h;
         }
@@ -218,31 +292,25 @@
         function calificar(id) {
             let r1 = document.getElementById(`res1-${id}`).value;
             let r2 = document.getElementById(`res2-${id}`).value;
-            
-            // 1. Guardar resultado oficial
             resultadosOficiales[id] = { g1: r1, g2: r2 };
             db.collection("sistema").doc("resultados").set(resultadosOficiales);
-
-            // 2. Repartir puntos
             misApuestasRealizadas.forEach(a => {
-                if(a.partidoId == id && a.goles1 == r1 && a.goles2 == r2) {
-                    rankingActual[a.nombrePersona] += 3;
-                }
+                if(a.partidoId == id && a.goles1 == r1 && a.goles2 == r2) rankingActual[a.nombrePersona] += 3;
             });
             db.collection("sistema").doc("ranking").set(rankingActual);
-            Swal.fire('Calificado', 'Resultado guardado y puntos repartidos', 'success');
+            Swal.fire('¡Hecho!', 'Puntos repartidos', 'success');
         }
 
         async function reiniciarSistema() {
-            const result = await Swal.fire({ title: '¿Limpiar todo?', text: "Borrarás apuestas, puntos e historial.", icon: 'warning', showCancelButton: true });
-            if (result.isConfirmed) {
+            const res = await Swal.fire({ title: '¿REINICIAR TODO?', text: "Borrarás apuestas y puntos.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444' });
+            if (res.isConfirmed) {
                 await db.collection("sistema").doc("ranking").set({ Roberto:0, Melissa:0, Estuardo:0, Luis:0 });
                 await db.collection("sistema").doc("resultados").set({});
                 const snap = await db.collection("apuestas").get();
                 const batch = db.batch();
                 snap.docs.forEach(d => batch.delete(d.ref));
                 await batch.commit();
-                Swal.fire('¡Limpio!', 'Todo vuelve a cero.', 'success');
+                Swal.fire('Limpio', 'Todo a cero.', 'success');
             }
         }
 
@@ -250,11 +318,11 @@
         function toqueSecreto() {
             clicks++;
             if(clicks === 3) {
-                Swal.fire({title:'Contraseña', input:'password'}).then(res => {
+                Swal.fire({title:'Contraseña de Director', input:'password', confirmButtonColor: '#1e293b'}).then(res => {
                     if(res.value === 'roberto2026') document.getElementById('panelAdmin').style.display='block';
                 });
             }
-            setTimeout(() => clicks = 0, 1000);
+            setTimeout(() => clicks = 0, 1200);
         }
     </script>
 </body>
